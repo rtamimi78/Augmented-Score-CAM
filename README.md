@@ -7,6 +7,8 @@ We develop a novel post-hoc visual explanation method called Augmented Score-CAM
 The following is the pipeline of our method:
 ![My Image](pics/Pipeline.png)
 
+Paper: [Augmented Score-CAM: High resolution visual interpretations for
+deep neural networks](https://doi.org/10.1016/j.knosys.2022.109287) published at: [Elsevier Knowledge Based Systems](https://www.journals.elsevier.com/knowledge-based-systems)
 ## References
 <a id="1">[1]</a> 
 AIR Galarza, J Seade (2007). 
