@@ -149,7 +149,6 @@ class ScoreCamModel:
         else:
             img_batch = np.concatenate(all_img_pre, 0)
         
-        #*************************** Modification **************************************************
         for input in image_batch:
           input = np.expand_dims(input,0)
           output_conv = self.last_conv_model.predict(input)
@@ -323,7 +322,6 @@ class Superresolution:
         self.augmenter = augmenter
         augcamsz = self.augmenter.augcamsz
 
-        # ************************** Modification ********************************************
         # placeholder tensor for the batch of CAMs resulting from augmentation
         self.tns_cam_aug= tf.placeholder("float", [None, camsz[0], camsz[1], 1])
 
@@ -371,7 +369,6 @@ class Superresolution:
             all_initializers.append(var.initializer)
 
         self.all_initializers = all_initializers
-
 
     def super_mixed(self, cams, angles, shift, lmbda_tv, lmbda_eng, niter=200):
         """ Compute the CAM solving the super resolution problem.
@@ -440,7 +437,7 @@ class Superresolution:
         #cv2.imwrite("ASC edges-after.png", edges)
         result = cv2.bitwise_and(background,background, mask= edges)
         cv2.imwrite(name + "-BLACKOUT.png", result)
-        #********************** Modification *******************************************
+        
         masked_foreground = np.array(masked_foreground , dtype=int)
         background = np.array(background , dtype=int)
         #cv2.imwrite("background" + ".png", background)
