@@ -11,7 +11,7 @@ Paper: [Augmented Score-CAM: High resolution visual interpretations for
 deep neural networks](https://doi.org/10.1016/j.knosys.2022.109287) published at: [Elsevier Knowledge Based Systems](https://www.journals.elsevier.com/knowledge-based-systems)
 
 ## Demo
-You can run an example for our Augmented Score-CAM via [Google Colab](https://drive.google.com/file/d/1h9hdCMblqlB5ErsSTu4EGMMk--p6HryS/view?usp=sharing)
+You can run an example for Augmented Score-CAM via [Google Colab](https://drive.google.com/file/d/1h9hdCMblqlB5ErsSTu4EGMMk--p6HryS/view?usp=sharing)
 ## Citation
 If you find the code useful for your research, please cite our work:
 
