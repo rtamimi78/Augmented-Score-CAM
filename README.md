@@ -9,9 +9,9 @@ The following is the pipeline of our method:
 
 Paper: [Augmented Score-CAM: High resolution visual interpretations for
 deep neural networks](https://doi.org/10.1016/j.knosys.2022.109287) published at: [Elsevier Knowledge Based Systems](https://www.journals.elsevier.com/knowledge-based-systems)
-
-##Citation
+## Citation
 If you find the code useful for your research, please cite our work:
+
 @article{IBRAHIM2022109287,
 title = {Augmented Score-CAM: High resolution visual interpretations for deep neural networks},
 journal = {Knowledge-Based Systems},
@@ -23,6 +23,8 @@ doi = {https://doi.org/10.1016/j.knosys.2022.109287},
 url = {https://www.sciencedirect.com/science/article/pii/S0950705122006451},
 author = {Rami Ibrahim and M. Omair Shafiq},
 keywords = {Explainable AI, Class activation maps, Augmented Score-CAM}
+## Contact
+If you have any questions, feel free to contact me at: ramif.ibrahim@carleton.ca
 ## References
 <a id="1">[1]</a> 
 AIR Galarza, J Seade (2007). 
