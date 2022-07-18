@@ -58,34 +58,6 @@ def get_bbox_from_cam(cam_full, thresh_rel=0.15):
 
     return order_bbox_from_sk(bbox)
 
-def bb_intersection_over_union(boxA, boxB):
-    """ Compute the intersection over union (IOU) metrics between two bounding boxes.
-    :param boxA: bounding box 1
-    :param boxB: bounding box 2
-    :return iou: the intersection over union of `boxA` and `boxB`
-    """
-    # determine the (x, y)-coordinates of the intersection rectangle
-    xA = max(boxA[0], boxB[0])
-    yA = max(boxA[2], boxB[2])
-    xB = min(boxA[1], boxB[1])
-    yB = min(boxA[3], boxB[3])
-
-    # compute the area of intersection rectangle
-    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-
-    # compute the area of both the prediction and ground-truth
-    # rectangles
-    boxAArea = (boxA[1] - boxA[0] + 1) * (boxA[3] - boxA[2] + 1)
-    boxBArea = (boxB[1] - boxB[0] + 1) * (boxB[3] - boxB[2] + 1)
-
-    # compute the intersection over union by taking the intersection
-    # area and dividing it by the sum of prediction + ground-truth
-    # areas - the intersection area
-    iou = interArea / float(boxAArea + boxBArea - interArea)
-
-    # return the intersection over union value
-    return iou
-
 class ScoreCamModel:
     def __init__(self, model_input, last_conv_output, softmax_output, input_shape, input, class_id, cam_batch_size=None):
         """
@@ -414,35 +386,6 @@ class Superresolution:
         _, mask = cv2.threshold(gray, thresh=th, maxval=255, type=cv2.THRESH_BINARY)
         mask = cv2.merge([mask, mask, mask])
         masked_foreground = cv2.bitwise_and(foreground, mask)
-
-        BLUE_MIN = np.array([75, 50, 50],np.uint8)
-        BLUE_MAX = np.array([130, 255, 255],np.uint8)
-        hsv_img = cv2.cvtColor(foreground,cv2.COLOR_BGR2HSV)
-        frame_threshed = cv2.inRange(hsv_img, BLUE_MIN, BLUE_MAX)
-        frame_threshed = cv2.bitwise_and(foreground, foreground, mask=frame_threshed)
-        frame_threshed = np.array(frame_threshed , dtype=np.uint8)
-        subtract_im = cv2.subtract(foreground, frame_threshed)
-        Z = cv2.addWeighted(background, 0.6, subtract_im, 0.4, 0)
-        cv2.imwrite(name + "-FILTER.png", Z)
-        #********************** Overlay image and blackout background ******************
-        blank_image = np.zeros((224,224,3), np.uint8)
-        Y1 = cv2.addWeighted(blank_image, 0.5, subtract_im, 0.5, 0)
-        edges = cv2.Canny(Y1,60,200)
-        #cv2.imwrite("ASC edges-before.png", edges)
-        cnts = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-        print("Number of ASC Contours is: " + str(len(cnts)))
-        for c in cnts:
-            cv2.drawContours(edges,[c], -1, (255,255,255), -1)
-        #cv2.imwrite("ASC edges-after.png", edges)
-        result = cv2.bitwise_and(background,background, mask= edges)
-        cv2.imwrite(name + "-BLACKOUT.png", result)
-        
-        masked_foreground = np.array(masked_foreground , dtype=int)
-        background = np.array(background , dtype=int)
-        #cv2.imwrite("background" + ".png", background)
-        #cv2.imwrite("foreground" + ".png", masked_foreground)
-
 
         # overlay heatmap to input image
         o = cv2.addWeighted(background, 0.6, masked_foreground, 0.4, 0)
