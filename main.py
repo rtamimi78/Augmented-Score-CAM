@@ -87,65 +87,8 @@ def visualizations(image_name, class_index):
       plt.gca().yaxis.set_major_locator(plt.NullLocator())
       plt.savefig(image_name+"-SSC.png", dpi=50)
       
-      foreground = np.uint8(heatmap / heatmap.max() * 255)
-      foreground = cv.applyColorMap(foreground, cv.COLORMAP_JET)
-      BLUE_MIN = np.array([75, 50, 50],np.uint8)
-      BLUE_MAX = np.array([130, 255, 255],np.uint8)
-      hsv_img = cv.cvtColor(foreground,cv.COLOR_BGR2HSV)
-      frame_threshed = cv.inRange(hsv_img, BLUE_MIN, BLUE_MAX)
-      frame_threshed = cv.bitwise_and(foreground, foreground, mask=frame_threshed)
-      frame_threshed = np.array(frame_threshed , dtype=np.uint8)
-      subtract_im = cv.subtract(foreground, frame_threshed)
-      image2 = cv.cvtColor(img2,cv.COLOR_BGR2RGB)
-      Z = cv.addWeighted(image2, 0.6, subtract_im, 0.4, 0)
-      cv.imwrite(image_name+"-SSC-FILTER.png", Z)
-      #********************** Overlay image and blackout background ******************
-      blank_image = np.zeros((224,224,3), np.uint8)
-      Y1 = cv.addWeighted(blank_image, 0.5, subtract_im, 0.5, 0)
-      edges = cv.Canny(Y1,60,200)
-      kernel = np.ones((2,2),np.uint8)
-      dilation = cv.dilate(edges,kernel,iterations = 10)
-      closing = cv.morphologyEx(dilation, cv.MORPH_CLOSE, kernel)
-      #cv.imwrite("SSC edges-before.png", edges)
-      cnts = cv.findContours(closing, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-      cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-      print("Number of SSC Contours is: " + str(len(cnts)))
-      for c in cnts:
-         cv.drawContours(closing,[c], -1, (255,255,255), -1)
-      #cv.imwrite("SSC edges-after.png", edges)
-      result = cv.bitwise_and(image2, image2, mask= closing)
-      cv.imwrite(image_name+ "-SSC-BLACKOUT.png", result)
-
+      
   draw_original_and_heatmap()
-  
-  #************************Generate Bounding Boxes for ASC heatmap********************#
-  bbox_tv = auggc.get_bbox_from_cam(np.float32(cam_no_blue))
-  rect_tv = auggc.get_rectangle(bbox_tv, color="red")
-
-  fig,ax = plt.subplots(1)
-  ax.imshow(img2)
-  ax.add_patch(rect_tv)
-  plt.gca().set_axis_off()
-  plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
-                      hspace = 0, wspace = 0)
-  plt.margins(0,0)
-  plt.gca().xaxis.set_major_locator(plt.NullLocator())
-  plt.gca().yaxis.set_major_locator(plt.NullLocator())
-  plt.savefig(image_name+"-ASC-RECT.png", dpi=50)
-  #************************Generate Bounding Boxes for SSC heatmap********************#
-  SSC_cam = Single_scoreCAM.final_class_activation_map
-  SSC_bbox_tv = auggc.get_bbox_from_cam(SSC_cam)
-  SSC_rect_tv = auggc.get_rectangle(SSC_bbox_tv, color="red")
-  fig,ax = plt.subplots(1)
-  ax.imshow(img2)
-  ax.add_patch(SSC_rect_tv)
-  plt.gca().set_axis_off()
-  plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
-                      hspace = 0, wspace = 0)
-  plt.margins(0,0)
-  plt.gca().xaxis.set_major_locator(plt.NullLocator())
-  plt.gca().yaxis.set_major_locator(plt.NullLocator())
-  plt.savefig(image_name+"-SSC-RECT.png", dpi=50)
   
 if __name__ == '__main__':
   image_name,class_index = sys.argv[1:3]
